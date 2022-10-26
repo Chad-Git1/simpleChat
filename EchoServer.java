@@ -3,6 +3,7 @@
 // license found at www.lloseng.com 
 
 
+import client.ChatClient;
 import ocsf.server.*;
 
 /**
@@ -71,7 +72,17 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
-  
+
+  @Override
+  protected void clientConnected(ConnectionToClient client) {
+    System.out.println("Client"+ client.toString() +" a connecte au serveur");
+  }
+
+  @Override
+  protected synchronized void clientDisconnected(ConnectionToClient client) {
+    System.out.println("Client"+ client.toString() +" a deconnecte au serveur");
+  }
+
   //Class methods ***************************************************
   
   /**
