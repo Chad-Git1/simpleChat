@@ -5,4 +5,6 @@ Prendre en compte que j'ai utilisé IntelliJ pour faire ce projet car il ne fonc
 Le programme n'est pas parfait .
 Un fichier DocX est inclu dans le repertoire contenant mes sorties.
 
+Il y a des lignes imprimés en anglais et en francais mais le message est le même, svp encore accepter les sorties.
+
 Merci
