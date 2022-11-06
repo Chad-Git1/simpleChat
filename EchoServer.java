@@ -6,6 +6,8 @@
 import client.ChatClient;
 import ocsf.server.*;
 
+import java.io.IOException;
+
 /**
  * This class overrides some of the methods in the abstract 
  * superclass in order to give more functionality to the server.
@@ -49,8 +51,24 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+    if (msg.toString().contains("#login") && msg.toString().contains("<") && msg.toString().contains(">") && client.getInfo("loginID")==null){
+      String m = msg.toString().split("<")[1];
+      m = m.split(">")[0];
+      client.setInfo("loginID",m);
+    }
+    else if (msg.toString().contains("#login") && msg.toString().contains("<") && msg.toString().contains(">")){
+      System.out.println("loginID already set, closing connection to server");
+      /// Insert code for #close here
+    }
+    else{
+    System.out.println("Message received: " + msg + " from <" + client.getInfo("loginID")+">");
+    this.sendToAllClients( "<" + client.getInfo("loginID")+"> : "+ msg);
+    }
+  }
+
+  public void handleMessageFromServer(Object msg)
+  {
+    this.sendToAllClients("<SERVER MSG> : " + msg);
   }
     
   /**
@@ -59,8 +77,7 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStarted()
   {
-    System.out.println
-      ("Server listening for connections on port " + getPort());
+    System.out.println("Server listening for connections on port " + getPort());
   }
   
   /**
@@ -75,12 +92,12 @@ public class EchoServer extends AbstractServer
 
   @Override
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println("Client"+ client.toString() +" a connecte au serveur");
+    System.out.println("Client "+ client.toString() +" a connecte au serveur.");
   }
 
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
-    System.out.println("Client"+ client.toString() +" a deconnecte au serveur");
+    System.out.println("Client "+ client.toString() +" a deconnecte au serveur.");
   }
 
   //Class methods ***************************************************
@@ -94,6 +111,7 @@ public class EchoServer extends AbstractServer
    */
   public static void main(String[] args) 
   {
+
     int port = 0; //Port to listen on
 
     try

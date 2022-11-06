@@ -9,7 +9,7 @@ import common.*;
 import java.io.*;
 
 /**
- * This class overrides some of the methods defined in the abstract
+ * This class overrides methods defined in the abstract
  * superclass in order to give more functionality to the client.
  *
  * @author Dr Timothy C. Lethbridge
@@ -25,7 +25,8 @@ public class ChatClient extends AbstractClient
    * The interface type variable.  It allows the implementation of 
    * the display method in the client.
    */
-  ChatIF clientUI; 
+  ChatIF clientUI;
+  String userID;
 
   
   //Constructors ****************************************************
@@ -38,11 +39,12 @@ public class ChatClient extends AbstractClient
    * @param clientUI The interface type variable.
    */
   
-  public ChatClient(String host, int port, ChatIF clientUI) 
+  public ChatClient(String host, int port, String userID, ChatIF clientUI)
     throws IOException 
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
+    this.userID = userID;
     openConnection();
   }
 
@@ -95,5 +97,14 @@ public class ChatClient extends AbstractClient
   protected void connectionClosed() {
     System.out.println("Connection closed");
   }
+  // Set
+  public void setUserID(String userID) {
+    this.userID = userID;
+  }
 }
+
+
+
+
+
 //End of ChatClient class
