@@ -76,16 +76,18 @@ public class EchoServer extends AbstractServer
         throw new RuntimeException(e);
       }
     }
-    else{
+    else {
       System.out.println("Message received: " + msg + " from " + client.getInfo("loginID"));
-      this.sendToAllClients( client.getInfo("loginID")+" : "+ msg);
+      this.sendToAllClients( client.getInfo("loginID")+" > "+ msg);
     }
 
   }
 
   public void handleMessageFromServer(Object msg)
   {
-    this.sendToAllClients("<SERVER MSG> : " + msg);
+    if (!msg.toString().contains("#")) {
+      this.sendToAllClients("<SERVER MSG> : " + msg);
+    }
   }
     
   /**
@@ -109,7 +111,8 @@ public class EchoServer extends AbstractServer
 
   @Override
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println("Client "+ client.getId() + " (ID) " + client.getInetAddress() +" (ADDRESS) a connecte au serveur.");
+    System.out.println("Message received: #login "+ client.getId()
+            +  " from " + client.getInfo("loginID") +". "+ client.getId() +  "  has logged on.");
   }
 
   @Override
