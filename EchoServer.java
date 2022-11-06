@@ -54,6 +54,8 @@ public class EchoServer extends AbstractServer
     if (msg.toString().contains("#login") && client.getInfo("loginID") == null){
       String m = msg.toString().split(" ")[1];
       client.setInfo("loginID",m);
+      System.out.println("A new client has connected to the server.");
+      sendToAllClients(client.getId()+" has logged on");
     }
     else if (msg.toString().contains("#login") && msg.toString().length() > 8){
       System.out.println("loginID already set, closing connection to server");
