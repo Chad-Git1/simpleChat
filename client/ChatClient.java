@@ -70,7 +70,8 @@ public class ChatClient extends AbstractClient
   {
     try
     {
-      sendToServer(message);
+      // WHEN TRYING TO LOG IN GOES HERE AND BREAKS
+        sendToServer(message);
     }
     catch(IOException e)
     {
@@ -79,7 +80,20 @@ public class ChatClient extends AbstractClient
       quit();
     }
   }
-  
+
+
+  @Override
+  protected void connectionEstablished() {
+    try {
+      this.sendToServer("#login " + this.userID);
+    }
+    catch (IOException e) {
+      clientUI.display("Connection problem, quitting");
+      quit();
+      throw new RuntimeException(e);
+    }
+  }
+
   /**
    * This method terminates the client.
    */

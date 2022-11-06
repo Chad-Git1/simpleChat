@@ -114,26 +114,37 @@ public class ClientConsole implements ChatIF
     if(message.contains("#quit")) {
 
       System.out.println("Quitting");
+      client.sendToServer("#quitting");
       client.quit();
 
     } else if (message.contains("#logoff")){
 
-      System.out.println("Closing connection to server host "+ client.getHost() + "on port" + client.getPort()+ ".");
-        client.closeConnection();
+      System.out.println("Closing connection to server host "+ client.getHost() + " on port " + client.getPort()+ ".");
+      client.sendToServer("#logoff");
 
     } else if (message.contains("#sethost")){
 
-        String m = message.split("<")[1];
-        m = m.split(">")[0];
-        client.setHost(m);
-        System.out.println("Host set to " + m + ".");
+        if(client.isConnected()){
+          System.out.println("Close connection to host before changing hostname");
+        }
+        else {
+          String m = message.split("<")[1];
+          m = m.split(">")[0];
+          client.setHost(m);
+          System.out.println("Host set to " + m + ".");
+        }
 
     } else if (message.contains("#setport")){
 
-        String m = message.split("<")[1] ;
+      if(client.isConnected()){
+        System.out.println("Close connection to host before changing port");
+      }
+      else {
+        String m = message.split("<")[1];
         int n = Integer.parseInt(m.split(">")[0]);
         client.setPort(n);
         System.out.println("Port set to " + n + ".");
+      }
 
     } else if (message.contains("#login")){
 
@@ -166,7 +177,7 @@ public class ClientConsole implements ChatIF
   {
     String host ;
     int port ;
-    String loginID;
+    String loginID = null;
 
     try
     {
@@ -174,7 +185,8 @@ public class ClientConsole implements ChatIF
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
-      loginID = "Anonymous";
+      System.out.println("No loginID given");
+      System.exit(1);
     }
 
     try

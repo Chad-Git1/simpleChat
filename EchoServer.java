@@ -49,21 +49,38 @@ public class EchoServer extends AbstractServer
    * @param client The connection from which the message originated.
    */
   public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
-  {
-    if (msg.toString().contains("#login") && msg.toString().contains("<") && msg.toString().contains(">") && client.getInfo("loginID")==null){
-      String m = msg.toString().split("<")[1];
-      m = m.split(">")[0];
+    (Object msg, ConnectionToClient client) {
+
+    if (msg.toString().contains("#login") && client.getInfo("loginID") == null){
+      String m = msg.toString().split(" ")[1];
       client.setInfo("loginID",m);
     }
-    else if (msg.toString().contains("#login") && msg.toString().contains("<") && msg.toString().contains(">")){
+    else if (msg.toString().contains("#login") && msg.toString().length() > 8){
       System.out.println("loginID already set, closing connection to server");
-      /// Insert code for #close here
+      try {client.close();} catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    else if (msg.toString().contains("#login")){
+      //
+    }
+
+    else if (msg.toString().contains( "#quitting")){
+      System.out.println( client.getInfo("loginID") + " disconnected");
+    }
+
+    else if (msg.toString().contains("#logoff")){
+      try {
+        client.close();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
     else{
-    System.out.println("Message received: " + msg + " from <" + client.getInfo("loginID")+">");
-    this.sendToAllClients( "<" + client.getInfo("loginID")+"> : "+ msg);
+      System.out.println("Message received: " + msg + " from " + client.getInfo("loginID"));
+      this.sendToAllClients( client.getInfo("loginID")+" : "+ msg);
     }
+
   }
 
   public void handleMessageFromServer(Object msg)
@@ -92,7 +109,7 @@ public class EchoServer extends AbstractServer
 
   @Override
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println("Client "+ client.toString() +" a connecte au serveur.");
+    System.out.println("Client "+ client.getId() + " (ID) " + client.getInetAddress() +" (ADDRESS) a connecte au serveur.");
   }
 
   @Override
